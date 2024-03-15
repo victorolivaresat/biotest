@@ -1,0 +1,10 @@
+.upload-img {
+  cursor: pointer;
+}
+
+.text-similarity  {
+  color: #2b268a !important;
+  font-weight: bold;
+  font-size: 50px !important;
+  text-align: center;
+}

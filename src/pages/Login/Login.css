@@ -1,0 +1,26 @@
+.bg-login {
+  background-color: #161616;;
+}
+
+.login-card {
+  width: 370px;
+}
+
+.logo-login {
+  width: 200px !important;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.header-login {
+  background-color: rgb(255, 255, 255);
+  border: none;
+  margin: 25px 0;
+}
+
+.forget-password {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.75rem;
+}

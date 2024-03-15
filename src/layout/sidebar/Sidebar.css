@@ -1,0 +1,45 @@
+.sidebar {
+  max-width: 15rem !important;
+}
+
+.sidebar-link{
+  padding: 0.3125rem 0.9375rem;
+  margin: 0.125rem 0.3125rem ;
+}
+
+.sidebar-link:hover {
+  background: #1266f10d;
+  border-radius: 0.3125rem;
+}
+
+.dropdown-sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 3.75rem;
+}
+
+.dropdown-sidebar a > span {
+  display: flex;
+  align-items: center;
+  gap: 0.9375rem;
+}
+
+.sidebar-link.active {
+  background: #d9dffa;
+  border-radius: 0.3125rem;
+  color: #02026e !important;
+  border-left: 0.3125rem solid #423dc8;
+}
+
+
+.sidebar-btn {
+  position: fixed;
+  top: 40%;
+  left: 0%;
+  z-index: 999;
+  background: #ffffff;
+  color: #323949;
+  padding: 2.5rem 0.2rem;
+  border-radius: 0 1rem 1rem 0;
+  cursor: pointer;
+}

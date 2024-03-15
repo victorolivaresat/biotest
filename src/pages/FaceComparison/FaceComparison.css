@@ -1,0 +1,59 @@
+.upload-img {
+  cursor: pointer;
+}
+
+.result-compre{
+  text-align: center;
+  color: #3a2180;
+  font-size: 50px;
+  font-weight: bold;
+  text-shadow: 4px 4px 4px hsla(0, 0%, 0%, 0.6);
+}
+
+
+.image-container {
+  position: relative;
+  display: flex; /* Esto centrará el contenido en ambos ejes si los items no tienen un ancho y alto explícito */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.image-container img {
+  max-width: 100%; /* Esto hará que la imagen sea responsiva y no exceda el ancho de su contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.image-container canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%; /* Esto asegura que el canvas no sea más grande que su contenedor */
+}
+
+.counter-compre {
+  position: fixed; /* Posicionamiento fijo en toda la pantalla */
+  top: 0;
+  left: 0;
+  width: 100%; /* Ancho completo */
+  height: 100%; /* Altura completa */
+  background-color: rgba(0, 0, 0, 0.74); /* Fondo semi-transparente */
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  color: white; /* Color del texto */
+  font-size: 2em; /* Tamaño del texto */
+  z-index: 1000; /* Asegurar que se muestre por encima de otros elementos */
+}
+
+.clear-img {
+  position: fixed;
+  bottom: 0;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 0 0 0 5px;
+  z-index: 1000;
+}

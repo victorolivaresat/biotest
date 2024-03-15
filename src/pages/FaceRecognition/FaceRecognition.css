@@ -1,0 +1,17 @@
+.btn-face-recognition {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.card-doc {
+  width: 70%;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .card-doc {
+    width: 100%;
+  }
+}

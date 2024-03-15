@@ -1,0 +1,29 @@
+.steps {
+  color: #2b2e61;
+}
+
+.badge-corner {
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: #2fa55c;
+  color: white;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.card-relative {
+  position: relative;
+}
+
+ol li::marker {
+  color: #b84949;
+  font-weight: bold;
+}

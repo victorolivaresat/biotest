@@ -1,0 +1,8 @@
+.route-fade {
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+}
+
+.route-fade.route-show {
+  opacity: 1;
+}
