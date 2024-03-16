@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import VerifiedGif from "../../assets/images/check.gif";
 import ErrorIcon from "../../assets/images/error.png";
@@ -14,10 +13,9 @@ const FaceComparison = () => {
   const [personImage, setPersonImage] = useState(
     localStorage.getItem("personImg")
   );
-  const [showCounter, setShowCounter] = useState(true);
+
   const [result, setResult] = useState(null);
-  const [counter, setCounter] = useState(10);
-  const [human, setHuman] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Ref for canvas
   const canvasSourceRef = useRef(null);
@@ -25,52 +23,14 @@ const FaceComparison = () => {
 
   let navigate = useNavigate();
 
-  useEffect(() => {
-    const humanConfig = {
-      face: {
-        enabled: true,
-        detector: { rotation: true, return: true },
-        mesh: { enabled: true },
-        description: { enabled: true },
-      },
-    };
-
-    const human = new Human(humanConfig);
-    setHuman(human);
-
-    return () => {
-      human.sleep();
-    };
-  }, []);
-
-  // Go to liveness
-  const goToLiveness = () => {
-    navigate("/liveness");
-  };
-
-  // Go to face comparison
-  const goToFaceRecognition = () => {
-    navigate("/face-recognition");
-  };
-
-  // Counter for face comparison
-  useEffect(() => {
-    // Solo inicia el contador si ambas imágenes están presentes y el contador está visible
-    if (personImage && capturedImage && showCounter) {
-      if (counter > 0) {
-        const timer = setTimeout(() => setCounter(counter - 1), 1000);
-        return () => clearTimeout(timer);
-      } else if (counter === 0) {
-        setShowCounter(false);
+  // Compare two images
+  const compareImages = async (human) => {
+    try {
+      if (!human) {
+        console.error("Human no está inicializado");
+        return;
       }
 
-      compareImages();
-    }
-  }, [counter, personImage, capturedImage, showCounter]);
-
-  // Compare two images
-  const compareImages = async () => {
-    try {
       let img1 = new Image();
       img1.src = personImage;
       await new Promise((resolve, reject) => {
@@ -85,24 +45,57 @@ const FaceComparison = () => {
         img2.onerror = reject;
       });
 
-      // Detect faces in both images
       const firstResult = await human.detect(img1);
       const secondResult = await human.detect(img2);
 
-      // Calcular similitud entre las caras
       const similarity = human.match.similarity(
         firstResult.face[0].embedding,
         secondResult.face[0].embedding
       );
 
-      console.log(`Las caras son ${100 * similarity}% similares`);
+      console.log("Similarity:", similarity);
 
-      // Mostrar el resultado en la interfaz de usuario
       setResult(100 * similarity);
+      setLoading(false);
     } catch (error) {
       console.error("Error en la comparación de imágenes:", error.message);
       setResult(null);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    const humanConfig = {
+      face: {
+        enabled: true,
+        detector: { rotation: true, return: true },
+        mesh: { enabled: true },
+        description: { enabled: true },
+      },
+    };
+
+    const human = new Human(humanConfig);
+
+    if (personImage && capturedImage) {
+      setLoading(true);
+      compareImages(human);
+    }
+
+    return () => {
+      human.sleep();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personImage, capturedImage]);
+
+  // Go to liveness
+  const goToLiveness = () => {
+    navigate("/liveness");
+  };
+
+  // Go to face comparison
+  const goToFaceRecognition = () => {
+    navigate("/face-recognition");
   };
 
   // Clear images from localStorage and state
@@ -127,14 +120,47 @@ const FaceComparison = () => {
           </Button>
         </Col>
         <Col md={12}>
-          {showCounter && personImage && capturedImage && (
+          {loading && (
             <div className="counter-compre">
-              <h5>Comparando rostros en {counter} segundos...</h5>
+              <div className="loader-comparison"></div>
             </div>
           )}
         </Col>
       </Row>
       <Row className="justify-content-center">
+        <Col lg={4} className="my-3">
+          <h6 className="text-center text-success">Result</h6>
+          <Card className="border-0 shadow">
+            <Card.Body className="text-center">
+              <Card.Text className="text-primary">
+                Un puntaje del 66% o más es una coincidencia
+              </Card.Text>
+              <div className="my-3">
+                {result !== null ? (
+                  result >= 50 ? (
+                    <div>
+                      <img src={VerifiedGif} alt="Verified" width={130} />
+                      <p className="text-success mt-2">
+                        ¡Verificación exitosa!
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <img src={ErrorIcon} alt="Error" width={200} />
+                      <p className="text-danger mt-2">
+                        La verificación no pasó. Repita el procedimiento.
+                      </p>
+                    </div>
+                  )
+                ) : (
+                  <div>
+                    <h1>{result ? result.toFixed(2) + "%" : ""}</h1>
+                  </div>
+                )}
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         <Col lg={4} className="my-3">
           <h6 className="text-center text-primary">Step 1</h6>
           <Card className="border-0 shadow">
@@ -173,43 +199,9 @@ const FaceComparison = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col lg={4} className="my-3">
-          <h6 className="text-center text-success">Result</h6>
-
-          <Card className="border-0 shadow">
-            <Card.Body className="text-center">
-              <Card.Text className="text-primary">
-                Un puntaje del 66% o más es una coincidencia
-              </Card.Text>
-              <div className="my-3">
-                {counter === 0 && result !== null ? (
-                  result >= 50 ? (
-                    <div>
-                      <img src={VerifiedGif} alt="Verified" width={130} />
-                      <p className="text-success mt-2">
-                        ¡Verificación exitosa!
-                      </p>
-                    </div>
-                  ) : (
-                    <div>
-                      <img src={ErrorIcon} alt="Error" width={200} />
-                      <p className="text-danger mt-2">
-                        La verificación no pasó. Repita el procedimiento.
-                      </p>
-                    </div>
-                  )
-                ) : (
-                  <div>
-                    <h1>{result ? result.toFixed(2) + "%" : ""}</h1>
-                  </div>
-                )}
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
       </Row>
     </Container>
   );
-}
+};
 
 export default FaceComparison;

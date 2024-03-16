@@ -2,7 +2,7 @@
   cursor: pointer;
 }
 
-.result-compre{
+.result-compre {
   text-align: center;
   color: #3a2180;
   font-size: 50px;
@@ -10,39 +10,38 @@
   text-shadow: 4px 4px 4px hsla(0, 0%, 0%, 0.6);
 }
 
-
 .image-container {
   position: relative;
-  display: flex; /* Esto centrará el contenido en ambos ejes si los items no tienen un ancho y alto explícito */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-container img {
-  max-width: 100%; /* Esto hará que la imagen sea responsiva y no exceda el ancho de su contenedor */
-  height: auto; /* Mantiene la proporción de la imagen */
+  max-width: 100%;
+  height: auto;
 }
 
 .image-container canvas {
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 100%; /* Esto asegura que el canvas no sea más grande que su contenedor */
+  max-width: 100%;
 }
 
 .counter-compre {
-  position: fixed; /* Posicionamiento fijo en toda la pantalla */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Ancho completo */
-  height: 100%; /* Altura completa */
-  background-color: rgba(0, 0, 0, 0.74); /* Fondo semi-transparente */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.74);
   display: flex;
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-  color: white; /* Color del texto */
-  font-size: 2em; /* Tamaño del texto */
-  z-index: 1000; /* Asegurar que se muestre por encima de otros elementos */
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2em;
+  z-index: 1000;
 }
 
 .clear-img {
@@ -56,4 +55,58 @@
   cursor: pointer;
   border-radius: 0 0 0 5px;
   z-index: 1000;
+}
+
+
+/* HTML: <div class="loader-comparison"></div> */
+.loader-comparison {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.loader-comparison:before,
+.loader-comparison:after {
+  content: "";
+  width: 35px;
+  aspect-ratio: 1;
+  box-shadow: 0 0 0 3px inset #fff;
+  animation: 2s infinite linear;
+  animation-name: l3-1, l3-2;
+  animation-delay: -1s, 0s
+}
+
+.loader-comparison:after {
+  --s: -1;
+}
+
+@keyframes l3-1 {
+  0% {
+    border-radius: 50% 0 0 50%
+  }
+
+  25% {
+    border-radius: 50% 50% 0 0
+  }
+
+  50% {
+    border-radius: 0 50% 50% 0
+  }
+
+  75% {
+    border-radius: 0 0 50% 50%
+  }
+
+  100% {
+    border-radius: 50% 0 0 50%
+  }
+}
+
+@keyframes l3-2 {
+  0% {
+    transform: scaleX(var(--s, 1)) rotate(0deg)
+  }
+
+  100% {
+    transform: scaleX(var(--s, 1)) rotate(-360deg)
+  }
 }
