@@ -23,47 +23,54 @@ const FaceRecognition = () => {
     );
   };
 
+  if (isMobileDevice()) {
+    const screenOrientation =
+      window.screen.orientation ||
+      window.screen.mozOrientation ||
+      window.screen.msOrientation;
+    if (screenOrientation) {
+      // Cancela cualquier operación de bloqueo de orientación pendiente
+      screenOrientation.unlock();
+      // Intenta bloquear la orientación de la pantalla en horizontal
+      screenOrientation.lock("landscape").catch((error) => {
+        console.error(
+          "No se pudo cambiar la orientación de la pantalla:",
+          error
+        );
+      });
+    }
+  }
+
   // Effect to get video stream and display it in the <video> element
   useEffect(() => {
     const verified = isMobileDevice();
     console.log(verified);
 
-    if (isMobileDevice()) {
-      const constraints = { video: { facingMode: { exact: "environment" } } };
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then((stream) => {
-          videoRef.current.srcObject = stream;
-        })
-        .catch((error) => {
-          if (error.name === "OverconstrainedError") {
-            console.error(
-              "Error: Las restricciones son demasiado restrictivas. Intentando con restricciones alternativas."
-            );
-            const alternativeConstraints = { video: { facingMode: "user" } };
-            navigator.mediaDevices
-              .getUserMedia(alternativeConstraints)
-              .then((stream) => {
-                videoRef.current.srcObject = stream;
-              })
-              .catch((error) => {
-                console.error("Error al obtener el flujo de video:", error);
-              });
-          } else {
-            console.error("Error al obtener el flujo de video:", error);
-          }
-        });
-    }
-  }, []);
+    const constraints = verified
+      ? { video: { facingMode: { exact: "environment" } } }
+      : { video: true };
 
-  // Start the camera
-  useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true })
+      .getUserMedia(constraints)
       .then((stream) => {
         videoRef.current.srcObject = stream;
       })
-      .catch(console.error);
+      .catch((error) => {
+        if (error.name === "OverconstrainedError") {
+          console.error("Restricciones muy estrictas. Probando alternativas.");
+          const alternativeConstraints = { video: { facingMode: "user" } };
+          navigator.mediaDevices
+            .getUserMedia(alternativeConstraints)
+            .then((stream) => {
+              videoRef.current.srcObject = stream;
+            })
+            .catch((error) => {
+              console.error("Error al obtener el flujo de video:", error);
+            });
+        } else {
+          console.error("Error al obtener el flujo de video:", error);
+        }
+      });
   }, []);
 
   // Función para capturar y guardar la imagen del video en el localStorage
