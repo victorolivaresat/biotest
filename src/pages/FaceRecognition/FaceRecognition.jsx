@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Row, Col, Button } from "react-bootstrap";
 import LoaderPage from "../../utils/LoaderPage";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import { FaCamera } from "react-icons/fa";
 import "./FaceRecognition.css";
 
@@ -11,19 +11,16 @@ const FaceRecognition = () => {
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
-  // Go to face comparison
   const goToFaceComaparison = () => {
     navigate("/face-comparison");
   };
 
-  // Verifica si el dispositivo es móvil
   const isMobileDevice = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
   };
 
-  // Effect to get video stream and display it in the <video> element
   useEffect(() => {
     const verified = isMobileDevice();
     console.log(verified);
@@ -61,7 +58,6 @@ const FaceRecognition = () => {
       });
   }, []);
 
-  // Función para capturar y guardar la imagen del video en el localStorage
   const captureAndSaveImage = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -84,7 +80,6 @@ const FaceRecognition = () => {
     }
   };
 
-  // Función para dibujar el contorno del DNI en el canvas
   const drawDNIOutline = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -147,7 +142,6 @@ const FaceRecognition = () => {
     context.stroke();
   };
 
-  // Efecto para dibujar el contorno del DNI cuando el componente se monta
   useEffect(() => {
     drawDNIOutline();
   }, []);
@@ -157,34 +151,27 @@ const FaceRecognition = () => {
       {loading ? (
         <LoaderPage />
       ) : (
-    
-          <div className="mt-2">
-            <div className="card-doc">
-              <div className="ratio ratio-4x3">
-                <video
-                  ref={videoRef}
-                  className="mirror"
-                  autoPlay
-                  playsInline
-                />
-                <canvas
-                  ref={canvasRef}
-                  height={480}
-                  width={640}
-                  className="position-absolute top-0 start-0"
-                />
-              </div>
+        <div className="mt-2">
+          <div className="card-doc">
+            <div className="ratio ratio-4x3">
+              <video ref={videoRef} className="mirror" autoPlay playsInline />
+              <canvas
+                ref={canvasRef}
+                height={480}
+                width={640}
+                className="position-absolute top-0 start-0"
+              />
             </div>
-            <Button
-              onClick={captureAndSaveImage}
-              variant="success"
-              className="btn-face-recognition rounded-bottom-0 rounded-top-4"
-            >
-              <FaCamera className="me-2" />
-              Capturar y Guardar
-            </Button>
           </div>
-  
+          <Button
+            onClick={captureAndSaveImage}
+            variant="success"
+            className="btn-face-recognition rounded-bottom-0 rounded-top-4"
+          >
+            <FaCamera className="me-2" />
+            Capturar y Guardar
+          </Button>
+        </div>
       )}
     </>
   );
