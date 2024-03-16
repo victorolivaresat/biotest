@@ -23,24 +23,6 @@ const FaceRecognition = () => {
     );
   };
 
-  if (isMobileDevice()) {
-    const screenOrientation =
-      window.screen.orientation ||
-      window.screen.mozOrientation ||
-      window.screen.msOrientation;
-    if (screenOrientation) {
-      // Cancela cualquier operación de bloqueo de orientación pendiente
-      screenOrientation.unlock();
-      // Intenta bloquear la orientación de la pantalla en horizontal
-      screenOrientation.lock("landscape").catch((error) => {
-        console.error(
-          "No se pudo cambiar la orientación de la pantalla:",
-          error
-        );
-      });
-    }
-  }
-
   // Effect to get video stream and display it in the <video> element
   useEffect(() => {
     const verified = isMobileDevice();
@@ -54,6 +36,9 @@ const FaceRecognition = () => {
       .getUserMedia(constraints)
       .then((stream) => {
         videoRef.current.srcObject = stream;
+        if (constraints.video.facingMode) {
+          videoRef.current.classList.add("mirror");
+        }
       })
       .catch((error) => {
         if (error.name === "OverconstrainedError") {
@@ -63,6 +48,9 @@ const FaceRecognition = () => {
             .getUserMedia(alternativeConstraints)
             .then((stream) => {
               videoRef.current.srcObject = stream;
+              if (alternativeConstraints.video.facingMode) {
+                videoRef.current.classList.remove("mirror");
+              }
             })
             .catch((error) => {
               console.error("Error al obtener el flujo de video:", error);
@@ -169,40 +157,34 @@ const FaceRecognition = () => {
       {loading ? (
         <LoaderPage />
       ) : (
-        <div className="container text-center container-horizontal">
-          <Row>
-            <Col md={12} className="my-3">
-              <div className="card-doc">
-                <div className="ratio ratio-4x3">
-                  <video
-                    ref={videoRef}
-                    className="mirror "
-                    autoPlay
-                    playsInline
-                  />
-                  <canvas
-                    ref={canvasRef}
-                    height={480}
-                    width={640}
-                    className="position-absolute top-0 start-0"
-                  />
-                </div>
+    
+          <div className="mt-2">
+            <div className="card-doc">
+              <div className="ratio ratio-4x3">
+                <video
+                  ref={videoRef}
+                  className="mirror"
+                  autoPlay
+                  playsInline
+                />
+                <canvas
+                  ref={canvasRef}
+                  height={480}
+                  width={640}
+                  className="position-absolute top-0 start-0"
+                />
               </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Button
-                onClick={captureAndSaveImage}
-                variant="success"
-                className="btn-face-recognition rounded-bottom-0 rounded-top-4"
-              >
-                <FaCamera className="me-2" />
-                Capturar y Guardar
-              </Button>
-            </Col>
-          </Row>
-        </div>
+            </div>
+            <Button
+              onClick={captureAndSaveImage}
+              variant="success"
+              className="btn-face-recognition rounded-bottom-0 rounded-top-4"
+            >
+              <FaCamera className="me-2" />
+              Capturar y Guardar
+            </Button>
+          </div>
+  
       )}
     </>
   );

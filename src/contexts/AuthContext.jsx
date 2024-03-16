@@ -12,6 +12,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const usersData = users;
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
+  }, []);
+
   const loginUser = async (email, password) => {
     try {
       const user = usersData.find(
@@ -21,6 +30,7 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         setCurrentUser(user);
         setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(user));
         toast.success("¡Bienvenido!");
       } else {
         toast.error("Credenciales inválidas. Por favor, inténtalo de nuevo.");
@@ -32,6 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUser = async () => {
     try {
+      localStorage.removeItem("user");
       setCurrentUser(null);
       setIsAuthenticated(false);
       toast.success("¡Hasta pronto!");
@@ -40,11 +51,6 @@ export const AuthProvider = ({ children }) => {
       toast.error("Error al cerrar sesión. Por favor, inténtalo de nuevo.");
     }
   };
-
-  useEffect(() => {
-    setIsAuthenticated(!!currentUser);
-    setLoading(false);
-  }, [currentUser]);
 
   const value = {
     currentUser,
