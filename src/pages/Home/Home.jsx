@@ -42,11 +42,11 @@ const Home = () => {
 
   const StepCard = ({ step, icon: Icon, title }) => {
     return (
-      <Col md={3} className="mt-3">
+      <Col md={3} className="mt-1">
         <Card className="steps card-relative text-bg-primary bg-opacity-50 shadow">
           <span className="badge-corner">{step}</span>
           <Card.Body>
-            <Icon size={50} className="mb-3" aria-label={title} />
+            <Icon size={50} className="mb-1" aria-label={title} />
             <h6>{title}</h6>
           </Card.Body>
         </Card>
@@ -66,81 +66,97 @@ const Home = () => {
         <LoaderPage />
       ) : (
         <Row className="justify-content-center">
-          <Col lg={9} md={10} sm={12}>
-            <div className="text-light bg-primary bg-opacity-10 mt-5 p-4 border-primary border-start border-5">
-              <Col md={12} className="text-center">
-                <h4 className="my-3 text-light">
-                  Prueba de demostración y verificación de identidad
-                </h4>
-                <p>
-                  Pasará por un proceso de verificación facial para demostrar
-                  que es una persona real.
-                </p>
-              </Col>
-              <Row className="text-center justify-content-center">
-                <StepCard
-                  step={1}
-                  icon={MdOutlineCheckCircle}
-                  title="Prueba de vida"
-                />
-                <StepCard
-                  step={2}
-                  icon={MdOutlineCameraAlt}
-                  title="Tómate un selfie."
-                />
-                <StepCard
-                  step={3}
-                  icon={MdOutlineTimer}
-                  title="Verificar Rostros"
-                />
+        <Col lg={12} md={12} sm={12} xs={12}>
+          <div className="text-light bg-primary bg-opacity-10 mt-3 p-4">
+            <Col md={12} className="text-center">
+              <h4 className="my-3 text-light">
+                Prueba de demostración y verificación de identidad
+              </h4>
+              <p>
+                Pasará por un proceso de verificación facial para demostrar
+                que es una persona real.
+              </p>
+            </Col>
+            <Row className="text-center justify-content-center">
+              <StepCard
+                step={1}
+                icon={MdOutlineCheckCircle}
+                title="Prueba de vida"
+              />
+              <StepCard
+                step={2}
+                icon={MdOutlineCameraAlt}
+                title="Tómate un selfie."
+              />
+              <StepCard
+                step={3}
+                icon={MdOutlineTimer}
+                title="Verificar Rostros"
+              />
+            </Row>
+            <Col md={12} className="justify-content-center">
+              <Row>
+                <Col md={6}>
+                  <Card className="my-4 mx-2 fs-6">
+                    <Card.Body>
+                      <ol  start="1">
+                        <li>
+                          Cuando vea un óvalo en la pantalla, alinee su rostro dentro
+                          del contorno y manténgase quieto hasta que la cámara capture
+                          la imagen.
+                        </li>
+                        <li>Maximice el brillo de la pantalla.</li>
+                      </ol>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="my-4 mx-2 fs-6">
+                    <Card.Body>
+                      <ol start="3">
+                        <li>
+                          Asegúrese de que su rostro no esté cubierto con gafas de sol
+                          o una máscara.
+                        </li>
+                        <li>
+                          Vaya a un lugar bien iluminado que no esté expuesto a la luz
+                          solar directa.
+                        </li>
+                      </ol>
+                    </Card.Body>
+                  </Card>
+                </Col>
               </Row>
-              <Col md={12}>
-                <ol className="my-5 mx-5 fs-6">
-                  <li>
-                    Cuando vea un óvalo en la pantalla, alinee su rostro dentro
-                    del contorno y manténgase quieto hasta que la cámara capture
-                    la imagen.
-                  </li>
-                  <li>Maximice el brillo de la pantalla.</li>
-                  <li>
-                    Asegúrese de que su rostro no esté cubierto con gafas de sol
-                    o una máscara.
-                  </li>
-                  <li>
-                    Vaya a un lugar bien iluminado que no esté expuesto a la luz
-                    solar directa.
-                  </li>
-                </ol>
-                <Row className="justify-content-center">
-                  <Col lg={3} className="d-grid gap-2 mt-3 mb-2 ">
-                    <Button
-                      variant="light"
-                      className="shadow"
-                      onClick={handleShowModal}
-                    >
-                      <TfiVideoClapper size={40} />
-                      <div>
-                        <span>Video Demo</span>
-                      </div>
-                    </Button>
-                  </Col>
-                  <Col lg={3} className="d-grid gap-2 mt-3 mb-2">
-                    <Button
-                      variant="success"
-                      className="shadow"
-                      onClick={goToLiveness}
-                    >
-                      <TbDeviceComputerCamera size={40} />
-                      <div>
-                        <span>Comenzar</span>
-                      </div>
-                    </Button>
-                  </Col>
-                </Row>
-              </Col>
-            </div>
-          </Col>
-        </Row>
+              <Row className="justify-content-center">
+                <Col lg={3} className="d-grid gap-2 mt-3 mb-2 ">
+                  <Button
+                    variant="light"
+                    className="shadow"
+                    onClick={handleShowModal}
+                  >
+                    <TfiVideoClapper size={40} />
+                    <div>
+                      <span>Video Demo</span>
+                    </div>
+                  </Button>
+                </Col>
+                <Col lg={3} className="d-grid gap-2 mt-3 mb-2">
+                  <Button
+                    variant="success"
+                    className="shadow"
+                    onClick={goToLiveness}
+                  >
+                    <TbDeviceComputerCamera size={40} />
+                    <div>
+                      <span>Comenzar</span>
+                    </div>
+                  </Button>
+                </Col>
+              </Row>
+            </Col>
+          </div>
+        </Col>
+      </Row>
       )}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton className="px-3 py-1">

@@ -67,13 +67,13 @@ const DetailsLiveness = () => {
       {loading ? (
         <LoaderPage />
       ) : (
-      <Card className="m-5" bg="dark" text="white">
+      <Card className="m-2" bg="dark" text="white">
         <Card.Header className="px-3">
           <PiInfoThin />
           &nbsp; Resultado de la validación
         </Card.Header>
         <Card.Body>
-          <Row className="justify-content-center py-3 rounded-3">
+          <Row className="justify-content-center py-2 rounded-3">
             <Col lg={6}>
               <img
                 className="img-fluid rounded-3 mx-auto d-block shadow"
@@ -207,7 +207,7 @@ const DetailsLiveness = () => {
                 </Tab>
               </Tabs>
             </Col>
-            <Col lg={12} className="text-center mt-2">
+            <Col lg={12} className="text-center mt-4">
               <div className="mb-3">
                 <img
                   src={isPersonValid ? VerifiedGif : ErrorIcon}

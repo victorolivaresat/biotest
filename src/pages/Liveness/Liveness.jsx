@@ -292,16 +292,10 @@ const Liveness = () => {
   // Capture live data
   const captureFaceLiveData = (live) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Agrega el nuevo valor 'live' al arreglo 'val'
       let newVal = [...newState.liveness.val, live];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'liveness' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.liveness = {
           ...newState.liveness,
@@ -323,16 +317,10 @@ const Liveness = () => {
   // Capture real data
   const captureRealData = (real) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Agrega el nuevo valor 'real' al arreglo 'val'
       let newVal = [...newState.antispoof.val, real];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'antispoof' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.antispoof = {
           ...newState.antispoof,
@@ -354,16 +342,10 @@ const Liveness = () => {
   // Capture age data
   const captureAgeData = (age) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Agrega el nuevo valor 'age' al arreglo 'val'
       let newVal = [...newState.age.val, age];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'age' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.age = {
           ...newState.age,
@@ -385,16 +367,10 @@ const Liveness = () => {
   // Capture Gender data
   const captureGenderData = (gender, genderScore) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Agrega el nuevo valor 'gender' y 'genderScore' al arreglo 'val'
       let newVal = [...newState.gender.val, { gender, genderScore }];
-
-      // Encuentra el valor máximo en 'genderScore'
       let maxVal = Math.max(...newVal.map((item) => item.genderScore));
 
-      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'gender' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.gender = {
           ...newState.gender,
@@ -416,16 +392,10 @@ const Liveness = () => {
   // Capture face confidence data
   const captureFaceConfidenceData = (faceConfidence) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Agrega el nuevo valor 'faceConfidence' al arreglo 'val'
       let newVal = [...newState.faceConfidence.val, faceConfidence];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'faceConfidence' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.faceConfidence = {
           ...newState.faceConfidence,
@@ -449,7 +419,6 @@ const Liveness = () => {
     setOk((prevState) => {
       let newState = { ...prevState };
 
-      // Agrega los nuevos gestos al arreglo 'val'
       let newVal = [...newState.gestures.val, ...gestures];
 
       newState.gestures = {
@@ -471,7 +440,6 @@ const Liveness = () => {
         };
       }
 
-      // Verifica si 'blinkDetected' existe en 'newState' antes de intentar cambiar su estado
       if (newState.blinkDetected) {
         let blinkLeftEye = gestures.includes("blink left eye");
         let blinkRightEye = gestures.includes("blink right eye");
@@ -502,19 +470,11 @@ const Liveness = () => {
   // Capture face size data
   const captureFaceSizeData = (face) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Calcula el nuevo valor de 'faceSize'
       let faceSizeVal = Math.min(face.box[2], face.box[3]);
-
-      // Agrega el nuevo valor 'faceSizeVal' al arreglo 'val'
       let newVal = [...newState.faceSize.val, faceSizeVal];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' es mayor que 'minSize', establece el estado de 'faceSize' en 'true'
       if (maxVal >= options.minSize) {
         newState.faceSize = {
           ...newState.faceSize,
@@ -536,19 +496,11 @@ const Liveness = () => {
   // Capture distance data
   const captureDistanceData = (distance) => {
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
-
-      // Obtiene el nuevo valor de 'distance'
       let distanceVal = distance || 0;
-
-      // Agrega el nuevo valor 'distanceVal' al arreglo 'val'
       let newVal = [...newState.distance.val, distanceVal];
-
-      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
-      // Si 'maxVal' está dentro del rango permitido, establece el estado de 'distance' en 'true'
       if (maxVal >= options.distanceMin && maxVal <= options.distanceMax) {
         newState.distance = {
           ...newState.distance,
@@ -570,24 +522,19 @@ const Liveness = () => {
   // Capture object data
   const captureObjectData = (object) => {
     if (!object || Object.keys(object).length === 0) {
-      // Si el objeto está vacío, no hagas nada
       return;
     }
 
     setOk((prevState) => {
-      // Copia el estado anterior
       let newState = { ...prevState };
 
-      // Agrega el nuevo objeto al array val
       let newVal = [
         ...newState.object.val,
         { score: object.score, label: object.label },
       ];
 
-      // Encuentra el score máximo en el array newVal
       let maxScore = Math.max(...newVal.map((obj) => obj.score));
 
-      // Actualiza el estado basándote en el score máximo
       if (maxScore >= options.minConfidence) {
         newState.object = {
           ...newState.object,
@@ -703,11 +650,8 @@ const Liveness = () => {
     window.addEventListener("resize", resizeCanvas, false);
     resizeCanvas();
 
-    // Draw the video on the canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
     let validatedCentered = isCenteredRef.current;
-
     const fill = validatedCentered ? "#7DCEA0" : "#F1948A";
 
     context.fillStyle = fill;

@@ -1,36 +1,32 @@
 import { createContext, useState, useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import users from "../assets/user.json";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Datos estáticos para fines de prueba
-  const mockUserData = {
-    email: "prevencion@apuestatotal.com",
-    password: "password",
-    firstName: "Prevencion",
-    lastName: "De Fraude",
-  };
+  const usersData = users;
 
   const loginUser = async (email, password) => {
     try {
-      // Simulación de inicio de sesión con datos estáticos
-      if (email === mockUserData.email && password === mockUserData.password) {
-        setCurrentUser(mockUserData);
+      const user = usersData.find(
+        (user) => user.email === email && user.password === password
+      );
+
+      if (user) {
+        setCurrentUser(user);
         setIsAuthenticated(true);
-        toast.success("¡Bienvenido de nuevo!");
+        toast.success("¡Bienvenido!");
       } else {
         toast.error("Credenciales inválidas. Por favor, inténtalo de nuevo.");
       }
     } catch (error) {
       toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo.");
-      console.error("Error durante el inicio de sesión", error);
     }
   };
 

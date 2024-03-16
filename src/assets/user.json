@@ -1,8 +1,86 @@
 [
   {
+    "id": 1,
+    "firstName": "PREVENCIÓN",
+    "lastName": "DE FRAUDE",
     "email": "prevencion@apuestatotal.com",
-    "password": "123456",
-    "firstName": "Prevencion",
-    "lastName": "Apuesta Total"
+    "password": "password"
+  },
+  {
+    "id": 2,
+    "firstName": "DAVID DANIEL",
+    "lastName": "FERNÁNDEZ MIRANDA",
+    "email": "daniel.fernandez@apuestatotal.com",
+    "password": "45820831"
+  },
+  {
+    "id": 3,
+    "firstName": "LUIS FERNANDO",
+    "lastName": "REYES DIAZ",
+    "email": "fernando.reyes@apuestatotal.com",
+    "password": "75331890"
+  },
+  {
+    "id": 4,
+    "firstName": "GIUSEPPE ESTEFANY",
+    "lastName": "CURINUQUI RIVERA",
+    "email": "estefany.curinuqui@apuestatotal.com",
+    "password": "76521701"
+  },
+  {
+    "id": 5,
+    "firstName": "CHRISTIAN JAIR",
+    "lastName": "MAYANGA ESPINOZA",
+    "email": "christian.mayanga@apuestatotal.com",
+    "password": "76057964"
+  },
+  {
+    "id": 6,
+    "firstName": "JHONNY",
+    "lastName": "SALAS MONTALVAN",
+    "email": "jhonny.salas@apuestatotal.com",
+    "password": "41752710"
+  },
+  {
+    "id": 7,
+    "firstName": "TIAN ANMEN",
+    "lastName": "VILLEGAS LONG",
+    "email": "tian.villegas@apuestatotal.com",
+    "password": "47734840"
+  },
+  {
+    "id": 8,
+    "firstName": "FLOR DE MARIA",
+    "lastName": "CARBONEL QUISPE",
+    "email": "flor.carbonel@apuestatotal.com",
+    "password": "70889728"
+  },
+  {
+    "id": 9,
+    "firstName": "JHON ELTON",
+    "lastName": "CORONADO FLORES",
+    "email": "jhon.coronado@apuestatotal.com",
+    "password": "46918794"
+  },
+  {
+    "id": 10,
+    "firstName": "HAROLD RENE",
+    "lastName": "CHUMPITAZ TAIPE",
+    "email": "harold.chumpitaz@apuestatotal.com",
+    "password": "47851466"
+  },
+  {
+    "id": 11,
+    "firstName": "ANGELICA DALILA",
+    "lastName": "YNGA ROMERO ",
+    "email": "angelica.ynga@apuestatotal.com",
+    "password": "46713517"
+  },
+  {
+    "id": 12,
+    "firstName": "JOSE ANTONIO",
+    "lastName": "ROMERO CARCASI",
+    "email": "jose.romero@apuestatotal.com",
+    "password": "76759950"
   }
 ]

@@ -31,7 +31,6 @@ const Test = () => {
 
   // Blink detection
   const blink = { start: 0, end: 0, time: 0 };
-  const duration = 10;
 
   const [ok, setOk] = useState({
     faceCount: { status: false, val: 0, text: "Face count" },

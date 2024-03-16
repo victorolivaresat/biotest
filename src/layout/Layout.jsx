@@ -14,7 +14,7 @@ const Layout = () => {
 
   return (
     <AuthProvider>
-      <Container fluid>
+      <Container>
         {location.pathname !== "/login" && (
           <Sidebar
             show={show}

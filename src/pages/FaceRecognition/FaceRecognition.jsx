@@ -16,7 +16,47 @@ const FaceRecognition = () => {
     navigate("/face-comparison");
   };
 
-  // Efecto para obtener el stream de video y mostrarlo en el elemento <video>
+  // Verifica si el dispositivo es móvil
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  };
+
+  // Effect to get video stream and display it in the <video> element
+  useEffect(() => {
+    const verified = isMobileDevice();
+    console.log(verified);
+
+    if (isMobileDevice()) {
+      const constraints = { video: { facingMode: { exact: "environment" } } };
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
+        })
+        .catch((error) => {
+          if (error.name === "OverconstrainedError") {
+            console.error(
+              "Error: Las restricciones son demasiado restrictivas. Intentando con restricciones alternativas."
+            );
+            const alternativeConstraints = { video: { facingMode: "user" } };
+            navigator.mediaDevices
+              .getUserMedia(alternativeConstraints)
+              .then((stream) => {
+                videoRef.current.srcObject = stream;
+              })
+              .catch((error) => {
+                console.error("Error al obtener el flujo de video:", error);
+              });
+          } else {
+            console.error("Error al obtener el flujo de video:", error);
+          }
+        });
+    }
+  }, []);
+
+  // Start the camera
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true })
@@ -122,39 +162,43 @@ const FaceRecognition = () => {
       {loading ? (
         <LoaderPage />
       ) : (
-        <Row>
-          <Col md={12} className="my-3">
-            <div className="card-doc">
-              <div className="ratio ratio-4x3">
-                <video
-                  ref={videoRef}
-                  className="mirror "
-                  autoPlay
-                  playsInline
-                />
-                <canvas
-                  ref={canvasRef}
-                  height={480}
-                  width={640}
-                  className="position-absolute top-0 start-0"
-                />
+        <div className="container text-center container-horizontal">
+          <Row>
+            <Col md={12} className="my-3">
+              <div className="card-doc">
+                <div className="ratio ratio-4x3">
+                  <video
+                    ref={videoRef}
+                    className="mirror "
+                    autoPlay
+                    playsInline
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    height={480}
+                    width={640}
+                    className="position-absolute top-0 start-0"
+                  />
+                </div>
               </div>
-            </div>
-          </Col>
-          <div>
-            <Button
-              onClick={captureAndSaveImage}
-              variant="success"
-              className="btn-face-recognition rounded-bottom-0 rounded-top-4"
-            >
-              <FaCamera className="me-2" />
-              Capturar y Guardar
-            </Button>
-          </div>
-        </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button
+                onClick={captureAndSaveImage}
+                variant="success"
+                className="btn-face-recognition rounded-bottom-0 rounded-top-4"
+              >
+                <FaCamera className="me-2" />
+                Capturar y Guardar
+              </Button>
+            </Col>
+          </Row>
+        </div>
       )}
     </>
   );
-}
+};
 
 export default FaceRecognition;
