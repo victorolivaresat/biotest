@@ -14,6 +14,9 @@ const FaceComparison = () => {
     localStorage.getItem("personImg")
   );
 
+  const personStatus = localStorage.getItem("personStatus");
+
+  const [human, sethuman] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,13 +56,12 @@ const FaceComparison = () => {
         secondResult.face[0].embedding
       );
 
-      console.log("Similarity:", similarity);
-
       setResult(100 * similarity);
       setLoading(false);
+
     } catch (error) {
+      setResult(0)
       console.error("Error en la comparación de imágenes:", error.message);
-      setResult(null);
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,11 @@ const FaceComparison = () => {
 
     const human = new Human(humanConfig);
 
-    if (personImage && capturedImage) {
+    console.log(personStatus)
+
+    sethuman(human);
+
+    if (personImage && capturedImage && personStatus == "true") {
       setLoading(true);
       compareImages(human);
     }
@@ -86,10 +92,11 @@ const FaceComparison = () => {
       human.sleep();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [personImage, capturedImage]);
+  }, [personImage, capturedImage, personStatus]);
 
   // Go to liveness
   const goToLiveness = () => {
+    human.sleep();
     navigate("/liveness");
   };
 
@@ -100,10 +107,13 @@ const FaceComparison = () => {
 
   // Clear images from localStorage and state
   const clearImages = () => {
+    localStorage.removeItem("personStatus");
     localStorage.removeItem("personImg");
     localStorage.removeItem("capturedImage");
+    setResult(null);
     setPersonImage(null);
     setCapturedImage(null);
+    location.reload();
   };
 
   return (
@@ -121,8 +131,8 @@ const FaceComparison = () => {
         </Col>
         <Col md={12}>
           {loading && (
-            <div className="counter-compre">
-              <div className="loader-comparison"></div>
+            <div className="counter">
+              <span className="loader-comparison"></span>
             </div>
           )}
         </Col>
@@ -165,9 +175,9 @@ const FaceComparison = () => {
           <h6 className="text-center text-primary">Step 1</h6>
           <Card className="border-0 shadow">
             <Card.Body className="text-center">
-              {capturedImage ? (
+              { personStatus == "true" ? (
                 <div className="image-container">
-                  <img src={capturedImage} className="img-fluid" />
+                  <img src={personImage} className="img-fluid" />
                   <canvas ref={canvasSourceRef}></canvas>
                 </div>
               ) : (
@@ -183,9 +193,9 @@ const FaceComparison = () => {
           <h6 className="text-center text-primary">Step 2</h6>
           <Card className="border-0 shadow">
             <Card.Body className="text-center">
-              {personImage ? (
+              {capturedImage ? (
                 <div className="image-container">
-                  <img src={personImage} className="img-fluid" />
+                  <img src={capturedImage} className="img-fluid" />
                   <canvas ref={canvasTargetRef}></canvas>
                 </div>
               ) : (

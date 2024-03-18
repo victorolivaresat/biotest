@@ -21,10 +21,6 @@
   display: block;
 }
 
-.mirror {
-  transform: rotateY(180deg);
-}
-
 .close-button {
   position: absolute;
   top: 5%;

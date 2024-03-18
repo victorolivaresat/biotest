@@ -43,6 +43,7 @@ const DetailsLiveness = () => {
   
 
   const isStatusTrue = (status) => {
+    localStorage.setItem("personStatus", status);
     return status === true;
   };
 

@@ -3,7 +3,7 @@ import { TbDeviceComputerCamera } from "react-icons/tb";
 import VideoDemo from "../../assets/video/bio_sm.mp4";
 import { TfiVideoClapper } from "react-icons/tfi";
 import LoaderPage from "../../utils/LoaderPage";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
@@ -12,7 +12,6 @@ import {
   MdOutlineTimer,
 } from "react-icons/md";
 import "./Home.css";
-
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -66,61 +65,56 @@ const Home = () => {
         <LoaderPage />
       ) : (
         <Row className="justify-content-center">
-        <Col lg={12} md={12} sm={12} xs={12}>
-          <div className="text-light bg-primary bg-opacity-10 mt-3 p-4">
-            <Col md={12} className="text-center">
-              <h4 className="my-3 text-light">
-                Prueba de demostración y verificación de identidad
-              </h4>
-              <p>
-                Pasará por un proceso de verificación facial para demostrar
-                que es una persona real.
-              </p>
-            </Col>
-            <Row className="text-center justify-content-center">
-              <StepCard
-                step={1}
-                icon={MdOutlineCheckCircle}
-                title="Prueba de vida"
-              />
-              <StepCard
-                step={2}
-                icon={MdOutlineCameraAlt}
-                title="Tómate un selfie."
-              />
-              <StepCard
-                step={3}
-                icon={MdOutlineTimer}
-                title="Verificar Rostros"
-              />
-            </Row>
-            <Col md={12} className="justify-content-center">
-              <Row>
-                <Col md={6}>
-                  <Card className="my-4 mx-2 fs-6">
+          <Col lg={12} md={12} sm={12} xs={12}>
+            <div className="text-light bg-primary bg-opacity-10 mt-3 p-4">
+              <Col md={12} className="text-center">
+                <h4 className="my-3 text-light">
+                  Prueba de demostración y verificación de identidad
+                </h4>
+                <p>
+                  Pasará por un proceso de verificación facial para demostrar
+                  que es una persona real.
+                </p>
+              </Col>
+              <Row className="text-center justify-content-center">
+                <StepCard
+                  step={1}
+                  icon={MdOutlineCheckCircle}
+                  title="Prueba de vida"
+                />
+                <StepCard
+                  step={2}
+                  icon={MdOutlineCameraAlt}
+                  title="Tómate un selfie."
+                />
+                <StepCard
+                  step={3}
+                  icon={MdOutlineTimer}
+                  title="Verificar Rostros"
+                />
+              </Row>
+              <Row className="justify-content-center">
+                <Col lg={9} md={9} sm={12}>
+                  <Card className="my-3 p-2 font-monospace">
                     <Card.Body>
-                      <ol  start="1">
+                      <ol>
                         <li>
-                          Cuando vea un óvalo en la pantalla, alinee su rostro dentro
-                          del contorno y manténgase quieto hasta que la cámara capture
-                          la imagen.
+                          Cuando vea un óvalo en la pantalla, alinee su rostro
+                          dentro del contorno y manténgase quieto hasta que la
+                          cámara capture la imagen.
                         </li>
                         <li>Maximice el brillo de la pantalla.</li>
-                      </ol>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col md={6}>
-                  <Card className="my-4 mx-2 fs-6">
-                    <Card.Body>
-                      <ol start="3">
                         <li>
-                          Asegúrese de que su rostro no esté cubierto con gafas de sol
-                          o una máscara.
+                          Asegúrese de que su rostro no esté cubierto con gafas
+                          de sol o una máscara.
                         </li>
                         <li>
-                          Vaya a un lugar bien iluminado que no esté expuesto a la luz
-                          solar directa.
+                          Vaya a un lugar bien iluminado que no esté expuesto a
+                          la luz solar directa.
+                        </li>
+                        <li>
+                          Colóquese delante de una pared, de preferencia blanca,
+                          y asegúrese de que no haya objetos cercanos.
                         </li>
                       </ol>
                     </Card.Body>
@@ -128,7 +122,7 @@ const Home = () => {
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col lg={3} className="d-grid gap-2 mt-3 mb-2 ">
+                <Col lg={3} md={6} className="d-grid gap-2 mt-1 mb-1">
                   <Button
                     variant="light"
                     className="shadow"
@@ -140,7 +134,7 @@ const Home = () => {
                     </div>
                   </Button>
                 </Col>
-                <Col lg={3} className="d-grid gap-2 mt-3 mb-2">
+                <Col lg={3} md={6} className="d-grid gap-2 mt-1 mb-1">
                   <Button
                     variant="success"
                     className="shadow"
@@ -153,10 +147,9 @@ const Home = () => {
                   </Button>
                 </Col>
               </Row>
-            </Col>
-          </div>
-        </Col>
-      </Row>
+            </div>
+          </Col>
+        </Row>
       )}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton className="px-3 py-1">

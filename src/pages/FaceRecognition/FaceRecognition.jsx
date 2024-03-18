@@ -33,9 +33,7 @@ const FaceRecognition = () => {
       .getUserMedia(constraints)
       .then((stream) => {
         videoRef.current.srcObject = stream;
-        if (constraints.video.facingMode) {
-          videoRef.current.classList.add("mirror");
-        }
+        videoRef.current.classList.add("mirror"); // Always add "mirror" class
       })
       .catch((error) => {
         if (error.name === "OverconstrainedError") {
@@ -45,9 +43,7 @@ const FaceRecognition = () => {
             .getUserMedia(alternativeConstraints)
             .then((stream) => {
               videoRef.current.srcObject = stream;
-              if (alternativeConstraints.video.facingMode) {
-                videoRef.current.classList.remove("mirror");
-              }
+              videoRef.current.classList.add("mirror"); // Always add "mirror" class
             })
             .catch((error) => {
               console.error("Error al obtener el flujo de video:", error);
@@ -71,6 +67,15 @@ const FaceRecognition = () => {
       const image = canvas.toDataURL("image/png");
       localStorage.setItem("capturedImage", image);
       setLoading(true);
+
+      video.pause();
+
+      if (video.srcObject) {
+        const tracks = video.srcObject.getTracks();
+        tracks.forEach((track) => {
+          track.stop();
+        });
+      }
 
       setTimeout(() => {
         goToFaceComaparison();
@@ -154,7 +159,7 @@ const FaceRecognition = () => {
         <div className="mt-2">
           <div className="card-doc">
             <div className="ratio ratio-4x3">
-              <video ref={videoRef} className="mirror" autoPlay playsInline />
+              <video ref={videoRef} autoPlay playsInline />
               <canvas
                 ref={canvasRef}
                 height={480}

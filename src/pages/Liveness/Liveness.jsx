@@ -7,7 +7,6 @@ import { MdFlip } from "react-icons/md";
 import Human from "@vladmandic/human";
 import "./Liveness.css";
 
-
 const Liveness = () => {
   /* State variables */
   /* ---------------------------------- */
@@ -15,6 +14,7 @@ const Liveness = () => {
   // Human.js instance
   let msg = "Active la cámara para iniciar el proceso de validación";
   const [human, setHuman] = useState(null);
+  const [counter, setCounter] = useState(5);
 
   // Webcam state
   const [isWebcamActive, setIsWebcamActive] = useState(false);
@@ -22,7 +22,7 @@ const Liveness = () => {
 
   // Process state
   const [processCompleted, setProcessCompleted] = useState(false);
-  const [distanceValidated, setDistanceValidated] = useState(false);
+  const distanceValidated = false;
 
   // Message and button state
   const [message, setMessage] = useState(msg);
@@ -38,6 +38,7 @@ const Liveness = () => {
   const validationStepRef = useRef(validationStep);
   const distanceValidatedRef = useRef(false);
   const isCenteredRef = useRef(false);
+  const counterRef = useRef(counter);
   const canvasRef = useRef(null);
   const nodeRef = useRef(null);
   const videoRef = useRef(null);
@@ -52,25 +53,23 @@ const Liveness = () => {
   // Minimum and maximum distance from the camera
   const minDistance = 0.25;
   const maxDistance = 0.35;
-  const maxInputRange = 0.70;
+  const maxInputRange = 0.7;
 
   // Data to be validated
   const [ok, setOk] = useState({
     // Face detection
     faceSize: { status: false, val: [], text: "Face size" },
     faceCount: { status: false, val: [], text: "Face count" },
-    faceConfidence: { status: false, val: [], text: "Face confidence" }, // % of face detected
-
+    faceConfidence: { status: false, val: [], text: "Face confidence" },
     // Gestures
     gestures: { val: [], text: "Gestures" },
     facingCenter: { status: false, text: "Facing center" },
     lookingCenter: { status: false, text: "Looking center" },
     blinkDetected: { status: false, val: [], text: "Blink detected" },
-
     // Liveness detection
-    antispoof: { status: false, val: [], text: "Antispoof" }, // % of face detected
-    liveness: { status: false, val: [], text: "Liveness" }, // % of face detected
-    distance: { status: false, val: [], text: "Distance" }, // % of face detected
+    antispoof: { status: false, val: [], text: "Antispoof" },
+    liveness: { status: false, val: [], text: "Liveness" },
+    distance: { status: false, val: [], text: "Distance" },
     object: { status: false, val: [], text: "Object" },
     gender: { status: false, val: [], text: "Gender" },
     age: { status: false, val: [], text: "Age" },
@@ -78,10 +77,10 @@ const Liveness = () => {
 
   // Human.js options
   const options = {
-    minConfidence: 0.60, // overal face confidence for box, face, gender, real, live
-    maxTime: 20000, // max time before giving up
-    distanceMin: minDistance, // closest that face is allowed to be to the cammera in cm
-    distanceMax: maxDistance, // farthest that face is allowed to be to the cammera in cm
+    minConfidence: 0.6,
+    maxTime: 20000,
+    distanceMin: minDistance,
+    distanceMax: maxDistance,
   };
 
   //  Transition styles
@@ -96,6 +95,13 @@ const Liveness = () => {
     entered: { opacity: 1 },
     exiting: { opacity: 1 },
     exited: { opacity: 0 },
+  };
+
+  // Check if the device is a mobile device
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
   };
 
   /* Functions */
@@ -191,11 +197,9 @@ const Liveness = () => {
 
   // Capture image from video
   const captureImage = () => {
-    // Verificar si videoRef.current está disponible
     const video = videoRef.current;
 
     if (video && video.readyState >= 2) {
-      // readyState >= 2 asegura que haya suficiente información para capturar la imagen
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
@@ -206,8 +210,6 @@ const Liveness = () => {
       const imageDataUrl = canvas.toDataURL("image/jpeg");
 
       localStorage.setItem("personImg", imageDataUrl);
-
-      // setCapturedImage(imageDataUrl);
     } else {
       console.log("Video no está listo o no disponible para captura");
     }
@@ -231,9 +233,20 @@ const Liveness = () => {
     }
   };
 
+  // Update counterRef when counter changes
+  useEffect(() => {
+    counterRef.current = counter;
+  }, [counter]);
+
   // Step one
   const stepOne = () => {
+    const timer = setInterval(() => {
+      setCounter((prevCounter) => prevCounter - 1);
+      console.log(counterRef.current);
+    }, 1000);
+
     setTimeout(() => {
+      clearInterval(timer);
       setValidationStep(1);
     }, 5000);
   };
@@ -292,10 +305,16 @@ const Liveness = () => {
   // Capture live data
   const captureFaceLiveData = (live) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Agrega el nuevo valor 'live' al arreglo 'val'
       let newVal = [...newState.liveness.val, live];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'liveness' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.liveness = {
           ...newState.liveness,
@@ -317,10 +336,16 @@ const Liveness = () => {
   // Capture real data
   const captureRealData = (real) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Agrega el nuevo valor 'real' al arreglo 'val'
       let newVal = [...newState.antispoof.val, real];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'antispoof' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.antispoof = {
           ...newState.antispoof,
@@ -342,10 +367,16 @@ const Liveness = () => {
   // Capture age data
   const captureAgeData = (age) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Agrega el nuevo valor 'age' al arreglo 'val'
       let newVal = [...newState.age.val, age];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'age' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.age = {
           ...newState.age,
@@ -367,10 +398,16 @@ const Liveness = () => {
   // Capture Gender data
   const captureGenderData = (gender, genderScore) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Agrega el nuevo valor 'gender' y 'genderScore' al arreglo 'val'
       let newVal = [...newState.gender.val, { gender, genderScore }];
+
+      // Encuentra el valor máximo en 'genderScore'
       let maxVal = Math.max(...newVal.map((item) => item.genderScore));
 
+      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'gender' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.gender = {
           ...newState.gender,
@@ -392,10 +429,16 @@ const Liveness = () => {
   // Capture face confidence data
   const captureFaceConfidenceData = (faceConfidence) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Agrega el nuevo valor 'faceConfidence' al arreglo 'val'
       let newVal = [...newState.faceConfidence.val, faceConfidence];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' es mayor que 'minConfidence', establece el estado de 'faceConfidence' en 'true'
       if (maxVal >= options.minConfidence) {
         newState.faceConfidence = {
           ...newState.faceConfidence,
@@ -419,6 +462,7 @@ const Liveness = () => {
     setOk((prevState) => {
       let newState = { ...prevState };
 
+      // Agrega los nuevos gestos al arreglo 'val'
       let newVal = [...newState.gestures.val, ...gestures];
 
       newState.gestures = {
@@ -440,6 +484,7 @@ const Liveness = () => {
         };
       }
 
+      // Verifica si 'blinkDetected' existe en 'newState' antes de intentar cambiar su estado
       if (newState.blinkDetected) {
         let blinkLeftEye = gestures.includes("blink left eye");
         let blinkRightEye = gestures.includes("blink right eye");
@@ -470,11 +515,19 @@ const Liveness = () => {
   // Capture face size data
   const captureFaceSizeData = (face) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Calcula el nuevo valor de 'faceSize'
       let faceSizeVal = Math.min(face.box[2], face.box[3]);
+
+      // Agrega el nuevo valor 'faceSizeVal' al arreglo 'val'
       let newVal = [...newState.faceSize.val, faceSizeVal];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' es mayor que 'minSize', establece el estado de 'faceSize' en 'true'
       if (maxVal >= options.minSize) {
         newState.faceSize = {
           ...newState.faceSize,
@@ -496,11 +549,19 @@ const Liveness = () => {
   // Capture distance data
   const captureDistanceData = (distance) => {
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
+
+      // Obtiene el nuevo valor de 'distance'
       let distanceVal = distance || 0;
+
+      // Agrega el nuevo valor 'distanceVal' al arreglo 'val'
       let newVal = [...newState.distance.val, distanceVal];
+
+      // Encuentra el valor máximo en 'newVal'
       let maxVal = Math.max(...newVal);
 
+      // Si 'maxVal' está dentro del rango permitido, establece el estado de 'distance' en 'true'
       if (maxVal >= options.distanceMin && maxVal <= options.distanceMax) {
         newState.distance = {
           ...newState.distance,
@@ -522,19 +583,24 @@ const Liveness = () => {
   // Capture object data
   const captureObjectData = (object) => {
     if (!object || Object.keys(object).length === 0) {
+      // Si el objeto está vacío, no hagas nada
       return;
     }
 
     setOk((prevState) => {
+      // Copia el estado anterior
       let newState = { ...prevState };
 
+      // Agrega el nuevo objeto al array val
       let newVal = [
         ...newState.object.val,
         { score: object.score, label: object.label },
       ];
 
+      // Encuentra el score máximo en el array newVal
       let maxScore = Math.max(...newVal.map((obj) => obj.score));
 
+      // Actualiza el estado basándote en el score máximo
       if (maxScore >= options.minConfidence) {
         newState.object = {
           ...newState.object,
@@ -633,37 +699,49 @@ const Liveness = () => {
 
   // Update canvas
   const updateCanvas = async () => {
-    requestAnimationFrame(updateCanvas);
+    try {
+      requestAnimationFrame(updateCanvas);
 
-    const canvas = canvasRef.current;
-    const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const video = videoRef.current;
 
-    if (!canvas || !video) {
-      return;
+      if (!canvas || !video) {
+        return;
+      }
+
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      window.addEventListener("resize", resizeCanvas, false);
+      resizeCanvas();
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      let validatedCentered = isCenteredRef.current;
+      const fill = validatedCentered ? "#7DCEA0" : "#F1948A";
+
+      context.fillStyle = fill;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Later draw the oval
+      context.globalCompositeOperation = "destination-out";
+
+      if (isMobileDevice()) {
+
+        console.log("isMobileDevice")
+        drawOval(context, (canvas.width / 2), (canvas.height / 2), 160, 240);
+      } else {
+        drawOval(context, (canvas.width / 2), (canvas.height / 2), 180, 300);
+      }
+
+      context.fill();
+
+      // Reset the context
+      context.globalCompositeOperation = "source-over";
+    } catch (error) {
+      console.error(error);
     }
-
-    const context = canvas.getContext("2d");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    window.addEventListener("resize", resizeCanvas, false);
-    resizeCanvas();
-
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    let validatedCentered = isCenteredRef.current;
-    const fill = validatedCentered ? "#7DCEA0" : "#F1948A";
-
-    context.fillStyle = fill;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Later draw the oval
-    context.globalCompositeOperation = "destination-out";
-    drawOval(context, canvas.width / 2, canvas.height / 2, 180, 300);
-    context.fill();
-
-    // Reset the context
-    context.globalCompositeOperation = "source-over";
   };
 
   // TODO: Función para iniciar la detección de liveness
@@ -708,48 +786,16 @@ const Liveness = () => {
 
   // Stop the webcam
   const resetLiveness = () => {
-    // Reset webcam state
-    setIsWebcamActive(false);
-    setIsMirrored(true);
-
-    // Reset process state
-    setProcessCompleted(false);
-    setDistanceValidated(false);
-
-    // Reset message and button state
-    setMessage(msg);
-    setValidationMessage(null);
-    setShowButton(false);
-
-    // Reset validation step
-    setDistance(0);
-    setValidationStep(0);
-
-    // Reset data to be validated
-    setOk({
-      faceSize: { status: false, val: [], text: "Face size" },
-      faceCount: { status: false, val: [], text: "Face count" },
-      faceConfidence: { status: false, val: [], text: "Face confidence" },
-      gestures: { val: [], text: "Gestures" },
-      facingCenter: { status: false, text: "Facing center" },
-      lookingCenter: { status: false, text: "Looking center" },
-      blinkDetected: { status: false, val: [], text: "Blink detected" },
-      antispoof: { status: false, val: [], text: "Antispoof" },
-      liveness: { status: false, val: [], text: "Liveness" },
-      distance: { status: false, val: [], text: "Distance" },
-      gender: { status: false, val: [], text: "Gender" },
-      age: { status: false, val: [], text: "Age" },
-      descriptor: { status: false, val: [], text: "Descriptor" },
-    });
+    location.reload();
   };
 
   // Stop liveness detection
   const stopLiveness = async () => {
     if (human.webcam) {
       try {
-        await human.webcam.pause();
+        await human.webcam.stop();
         setIsWebcamActive(false);
-        human.sleep();
+        human.reset();
       } catch (error) {
         console.error("Failed to stop webcam:", error);
       }
@@ -767,6 +813,12 @@ const Liveness = () => {
 
   return (
     <Container className="pt-4">
+      {isWebcamActive && counterRef.current > 0 && (
+        <div className="counter">
+          <span>{counter}</span>
+        </div>
+      )}
+
       <h4 className="show-message">{message}</h4>
 
       <Button
@@ -836,6 +888,6 @@ const Liveness = () => {
       </Transition>
     </Container>
   );
-}
+};
 
 export default Liveness;
