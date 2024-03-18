@@ -51,8 +51,8 @@ const Liveness = () => {
   const duration = 500;
 
   // Minimum and maximum distance from the camera
-  const minDistance = 0.25;
-  const maxDistance = 0.35;
+  const minDistance = 0.20;
+  const maxDistance = 0.40;
   const maxInputRange = 0.7;
 
   // Data to be validated
@@ -664,7 +664,7 @@ const Liveness = () => {
   // Handle validation
   const handleValidation = (isCentered, isAtCorrectDistance) => {
     let validationStep = validationStepRef.current;
-    let msg1 = "Manten la distancia y coloca tu rostro en el ovalo";
+    let msg1 = "Coloca tu rostro en el ovalo";
     let msg2 = "Espere un momento, estamos validando su rostro";
 
     if (validationStep === 2) {
