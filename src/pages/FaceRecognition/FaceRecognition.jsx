@@ -3,6 +3,7 @@ import LoaderPage from "../../utils/LoaderPage";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { FaCamera } from "react-icons/fa";
+import { MdFlip } from "react-icons/md";
 import "./FaceRecognition.css";
 
 const FaceRecognition = () => {
@@ -10,6 +11,7 @@ const FaceRecognition = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [isMirror, setIsMirror] = useState(false);
 
   const goToFaceComaparison = () => {
     navigate("/face-comparison");
@@ -19,6 +21,10 @@ const FaceRecognition = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
+  };
+
+  const handleMirror = () => {
+    setIsMirror(!isMirror);
   };
 
   useEffect(() => {
@@ -33,7 +39,9 @@ const FaceRecognition = () => {
       .getUserMedia(constraints)
       .then((stream) => {
         videoRef.current.srcObject = stream;
-        videoRef.current.classList.add("mirror"); // Always add "mirror" class
+        if (constraints.video.facingMode) {
+          videoRef.current.classList.add("mirror");
+        }
       })
       .catch((error) => {
         if (error.name === "OverconstrainedError") {
@@ -43,7 +51,6 @@ const FaceRecognition = () => {
             .getUserMedia(alternativeConstraints)
             .then((stream) => {
               videoRef.current.srcObject = stream;
-              videoRef.current.classList.add("mirror"); // Always add "mirror" class
             })
             .catch((error) => {
               console.error("Error al obtener el flujo de video:", error);
@@ -159,7 +166,12 @@ const FaceRecognition = () => {
         <div className="mt-2">
           <div className="card-doc">
             <div className="ratio ratio-4x3">
-              <video ref={videoRef} autoPlay playsInline />
+              <video
+                ref={videoRef}
+                className={isMirror ? "mirror" : ""}
+                autoPlay
+                playsInline
+              />
               <canvas
                 ref={canvasRef}
                 height={480}
@@ -175,6 +187,13 @@ const FaceRecognition = () => {
           >
             <FaCamera className="me-2" />
             Capturar y Guardar
+          </Button>
+          <Button
+            onClick={handleMirror}
+            variant="light"
+            className="mirror-btn rounded-bottom-4 rounded-top-0"
+          >
+            <MdFlip />
           </Button>
         </div>
       )}
