@@ -1,6 +1,6 @@
 import { Row, Col, Card, Button, Modal, Ratio } from "react-bootstrap";
 import { TbDeviceComputerCamera } from "react-icons/tb";
-import VideoDemo from "../../assets/video/bio_sm.mp4";
+import VideoDemo from "../../assets/video/bio_s.mp4";
 import { TfiVideoClapper } from "react-icons/tfi";
 import LoaderPage from "../../utils/LoaderPage";
 import { useNavigate } from "react-router-dom";
