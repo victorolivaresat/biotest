@@ -2,6 +2,7 @@ import { FaPlay, FaStop, FaTimes } from "react-icons/fa";
 import { Transition } from "react-transition-group";
 import { useState, useEffect, useRef } from "react";
 import { Button, Container } from "react-bootstrap";
+import LoaderPage from "../../utils/LoaderPage";
 import { useNavigate } from "react-router-dom";
 import { MdFlip } from "react-icons/md";
 import Human from "@vladmandic/human";
@@ -13,6 +14,7 @@ const Liveness = () => {
 
   // Human.js instance
   let msg = "Active la cámara para iniciar el proceso de validación";
+  const [isModelLoading, setIsModelLoading] = useState(false);
   const [human, setHuman] = useState(null);
   const [counter, setCounter] = useState(5);
 
@@ -51,8 +53,8 @@ const Liveness = () => {
   const duration = 500;
 
   // Minimum and maximum distance from the camera
-  const minDistance = 0.20;
-  const maxDistance = 0.40;
+  const minDistance = 0.2;
+  const maxDistance = 0.4;
   const maxInputRange = 0.7;
 
   // Data to be validated
@@ -107,8 +109,7 @@ const Liveness = () => {
   /* Functions */
 
   // Url models
-  const blazefaceFront = "../models/blazeface-front.json";
-  const nanodet = "../models/nanodet.json";
+  const nanodet = "models/nanodet.json";
 
   // Human.js config object for face detection
   useEffect(() => {
@@ -116,11 +117,10 @@ const Liveness = () => {
       debug: true,
       backend: "webgl",
       cacheSensitivity: 0,
-      modelBasePath: "../models",
+      modelBasePath: "https://cdn.jsdelivr.net/gh/vladmandic/human-models",
       face: {
         enabled: true,
         detector: {
-          modelPath: blazefaceFront,
           maxDetected: 1,
         },
         emotion: { enabled: true },
@@ -141,6 +141,7 @@ const Liveness = () => {
     };
 
     const humanInstance = new Human(humanConfig);
+    humanInstance.load();
     setHuman(humanInstance);
 
     return () => {
@@ -148,14 +149,37 @@ const Liveness = () => {
     };
   }, []);
 
+  // Update validation step
+  useEffect(() => {
+    validationStepRef.current = validationStep;
+  }, [validationStep]);
+
+  // Update distanceValidatedRef when distanceValidated changes
+  useEffect(() => {
+    distanceValidatedRef.current = distanceValidated;
+  }, [distanceValidated]);
+
+  // Update isCenteredRef when isCentered changes
+  useEffect(() => {
+    isCenteredRef.current = isCentered;
+  }, [isCentered]);
+
+  // Go to the next page details-liveness
+  useEffect(() => {
+    if (processCompleted) {
+      if (processCompleted) {
+        navigate("/details-liveness", { state: { ok } });
+      }
+    }
+  }, [processCompleted, ok, navigate]);
+
+  // Update counterRef when counter changes
+  useEffect(() => {
+    counterRef.current = counter;
+  }, [counter]);
+
   // Start the webcam
   const startWebcam = async () => {
-    let msg = "Coloca tu rostro frente a la cámara.";
-
-    if (!human.webcam) {
-      console.error("Webcam not available");
-      return;
-    }
 
     const configWebcam = {
       facingMode: "user",
@@ -163,32 +187,37 @@ const Liveness = () => {
       height: { ideal: document.body.clientHeight },
     };
 
-    try {
-      await human.webcam.start(configWebcam);
-      videoRef.current.srcObject = human.webcam.stream;
-      setValidationMessage(msg);
-      setIsWebcamActive(true);
-      setShowButton(true);
-      setMessage(null);
-      startLiveness();
-      stepOne();
-    } catch (error) {
-      console.error("Failed to start webcam:", error);
+    setIsModelLoading(true);
+    const models = await human.models.list();
+    const allModelsLoaded = models.every(
+      (model) => model.loaded && model.size > 0
+    );
+
+    if (allModelsLoaded) {
+      try {
+        await human.webcam.start(configWebcam);
+        videoRef.current.srcObject = human.webcam.stream;
+
+        if (!human.webcam.stream?.active) {
+          setMessage('La cámara no está disponible');
+          setIsModelLoading(false);
+          return;
+        }
+    
+        setIsModelLoading(false);
+        setIsWebcamActive(true);
+        setShowButton(true);
+        setMessage(null);
+        startLiveness();
+        stepOne();
+      } catch (error) {
+        console.error("Failed to start webcam:", error);
+      }
+    } else {
+      console.log("Models not loaded");
+      setIsModelLoading(true);
     }
   };
-
-  // Update validation step
-  useEffect(() => {
-    validationStepRef.current = validationStep;
-  }, [validationStep]);
-
-  useEffect(() => {
-    distanceValidatedRef.current = distanceValidated;
-  }, [distanceValidated]);
-
-  useEffect(() => {
-    isCenteredRef.current = isCentered;
-  }, [isCentered]);
 
   // Toggle mirror effect
   const toggleMirror = () => {
@@ -226,23 +255,15 @@ const Liveness = () => {
 
   // Run detection
   const runDetection = async () => {
-    if (!human.webcam.paused) {
+    if (videoRef.current && !human.webcam.paused && human.webcam.stream) {
       await human.detect(videoRef.current);
-    } else {
-      await human.sleep(); // release resources
     }
   };
-
-  // Update counterRef when counter changes
-  useEffect(() => {
-    counterRef.current = counter;
-  }, [counter]);
 
   // Step one
   const stepOne = () => {
     const timer = setInterval(() => {
       setCounter((prevCounter) => prevCounter - 1);
-      console.log(counterRef.current);
     }, 1000);
 
     setTimeout(() => {
@@ -648,7 +669,7 @@ const Liveness = () => {
   // Handle validation
   const updateFacialData = async (face, gestures, object) => {
     await processFacialData(face.distance);
-    // Caprure data
+    // Capture data
     await captureGenderData(face.gender, face.genderScore);
     await captureFaceConfidenceData(face.faceScore);
     await captureDistanceData(face.distance);
@@ -674,13 +695,13 @@ const Liveness = () => {
       }, 2000);
     } else if (validationStep === 3 && isCentered && isAtCorrectDistance) {
       setTimeout(() => {
-        captureImage();
         setValidationMessage(msg2);
         setIsCentered(true);
         setValidationStep(4);
       }, 1000);
     } else if (validationStep === 4) {
       setTimeout(() => {
+        captureImage();
         setIsWebcamActive(false);
         setProcessCompleted(true);
         setValidationStep(5);
@@ -728,11 +749,9 @@ const Liveness = () => {
       context.globalCompositeOperation = "destination-out";
 
       if (isMobileDevice()) {
-
-        console.log("isMobileDevice")
-        drawOval(context, (canvas.width / 2), (canvas.height / 2), 160, 240);
+        drawOval(context, canvas.width / 2, canvas.height / 2, 160, 240);
       } else {
-        drawOval(context, (canvas.width / 2), (canvas.height / 2), 180, 300);
+        drawOval(context, canvas.width / 2, canvas.height / 2, 180, 300);
       }
 
       context.fill();
@@ -747,7 +766,7 @@ const Liveness = () => {
   // TODO: Función para iniciar la detección de liveness
   // Start liveness detection
   const startLiveness = async () => {
-    if (!human || !videoRef.current) {
+    if (!human || !videoRef.current || !canvasRef.current) {
       return;
     }
 
@@ -776,12 +795,12 @@ const Liveness = () => {
       await handleValidation(isCentered, isAtCorrectDistance);
       await updateCanvas();
     } else {
-      setValidationMessage("No se detecta rostro, colócate frente a la cámara");
+      setValidationMessage("Colóca tu rostro frente a la cámara");
     }
 
-    setTimeout(startLiveness, 10);
+    // setTimeout(startLiveness, 30);
 
-    // requestAnimationFrame(startLiveness);
+    requestAnimationFrame(startLiveness);
   };
 
   // Stop the webcam
@@ -802,17 +821,10 @@ const Liveness = () => {
     }
   };
 
-  // Go to the next page details-liveness
-  useEffect(() => {
-    if (processCompleted) {
-      if (processCompleted) {
-        navigate("/details-liveness", { state: { ok } });
-      }
-    }
-  }, [processCompleted, ok, navigate]);
-
   return (
     <Container className="pt-4">
+      {isModelLoading && <LoaderPage />}
+
       {isWebcamActive && counterRef.current > 0 && (
         <div className="counter">
           <span>{counter}</span>

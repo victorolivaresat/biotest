@@ -78,9 +78,6 @@ const FaceComparison = () => {
     };
 
     const human = new Human(humanConfig);
-
-    console.log(personStatus)
-
     sethuman(human);
 
     if (personImage && capturedImage && personStatus == "true") {

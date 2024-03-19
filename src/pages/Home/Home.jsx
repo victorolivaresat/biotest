@@ -121,10 +121,10 @@ const Home = () => {
                   </Card>
                 </Col>
               </Row>
-              <Row className="justify-content-center">
+              <Row className=" justify-content-around">
                 <Col lg={3} md={6} className="d-grid gap-2 mt-1 mb-1">
                   <Button
-                    variant="light"
+                    variant="warning"
                     className="shadow"
                     onClick={handleShowModal}
                   >

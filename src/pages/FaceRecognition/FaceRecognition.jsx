@@ -29,8 +29,6 @@ const FaceRecognition = () => {
 
   useEffect(() => {
     const verified = isMobileDevice();
-    console.log(verified);
-
     const constraints = verified
       ? { video: { facingMode: { exact: "environment" } } }
       : { video: true };

@@ -29,9 +29,6 @@ const DetailsLiveness = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  console.log(ok)
-
- 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);
