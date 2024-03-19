@@ -137,7 +137,6 @@ const Liveness = () => {
       },
       body: { enabled: false },
       hand: { enabled: false },
-      filter: { enabled: true },
     };
 
     const humanInstance = new Human(humanConfig);
@@ -192,6 +191,18 @@ const Liveness = () => {
       (model) => model.loaded && model.size > 0
     );
 
+    const loadModels = async () => {
+      await human.load();
+    };
+
+    if(loadModels) {
+      console.log("Models loaded");
+    } else {
+      setMessage("Cargando modelos");
+      console.log("Cargando modelos");
+
+    }
+
     if (allModelsLoaded) {
       try {
         await human.webcam.start(configWebcam);
@@ -203,8 +214,6 @@ const Liveness = () => {
           return;
         }
 
-
-
         setIsModelLoading(false);
         setIsWebcamActive(true);
         setShowButton(true);
@@ -212,6 +221,7 @@ const Liveness = () => {
         startLiveness();
         startCounter();
         stepOne();
+
 
       } catch (error) {
         console.error("Failed to start webcam:", error);

@@ -78,8 +78,9 @@ video {
 input[type="range"] {
   position: fixed;
   bottom: 10%;
-  left: 40%;
-  width: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4dvh;
   z-index: 1000;
 }
 
@@ -90,7 +91,7 @@ input[type="range"] {
   appearance: none;
   background: transparent;
   cursor: pointer;
-  width: 20%;
+  width: 40%;
 }
 
 /* Removes default focus */
