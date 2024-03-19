@@ -109,7 +109,7 @@ const Liveness = () => {
   /* Functions */
 
   // Url models
-  const nanodet = "models/nanodet.json";
+  const nanodet = "nanodet.json";
 
   // Human.js config object for face detection
   useEffect(() => {
@@ -117,7 +117,7 @@ const Liveness = () => {
       debug: true,
       backend: "webgl",
       cacheSensitivity: 0,
-      modelBasePath: "https://cdn.jsdelivr.net/gh/vladmandic/human-models",
+      modelBasePath: "https://cdn.jsdelivr.net/gh/vladmandic/human-models/models",
       face: {
         enabled: true,
         detector: {
@@ -188,6 +188,8 @@ const Liveness = () => {
     setIsModelLoading(true);
 
     const models = await human.models.list();
+
+    console.log(models)
 
     const allModelsLoaded = models.every(
       (model) => model.loaded && model.size > 0
