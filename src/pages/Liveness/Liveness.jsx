@@ -186,22 +186,13 @@ const Liveness = () => {
     };
 
     setIsModelLoading(true);
+
     const models = await human.models.list();
+
     const allModelsLoaded = models.every(
       (model) => model.loaded && model.size > 0
     );
 
-    const loadModels = async () => {
-      await human.load();
-    };
-
-    if(loadModels) {
-      console.log("Models loaded");
-    } else {
-      setMessage("Cargando modelos");
-      console.log("Cargando modelos");
-
-    }
 
     if (allModelsLoaded) {
       try {
