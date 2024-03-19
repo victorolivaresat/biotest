@@ -137,7 +137,7 @@ const Liveness = () => {
       },
       body: { enabled: false },
       hand: { enabled: false },
-      filter: { enabled: false },
+      filter: { enabled: true },
     };
 
     const humanInstance = new Human(humanConfig);
@@ -180,7 +180,6 @@ const Liveness = () => {
 
   // Start the webcam
   const startWebcam = async () => {
-
     const configWebcam = {
       facingMode: "user",
       width: { ideal: document.body.clientWidth },
@@ -199,17 +198,21 @@ const Liveness = () => {
         videoRef.current.srcObject = human.webcam.stream;
 
         if (!human.webcam.stream?.active) {
-          setMessage('La cámara no está disponible');
+          setMessage("La cámara no está disponible");
           setIsModelLoading(false);
           return;
         }
-    
+
+
+
         setIsModelLoading(false);
         setIsWebcamActive(true);
         setShowButton(true);
         setMessage(null);
         startLiveness();
+        startCounter();
         stepOne();
+
       } catch (error) {
         console.error("Failed to start webcam:", error);
       }
@@ -218,6 +221,13 @@ const Liveness = () => {
       setIsModelLoading(true);
     }
   };
+
+  const startCounter = () => {
+    setInterval(() => {
+      setCounter((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
+    }, 1000);
+  };
+
 
   // Toggle mirror effect
   const toggleMirror = () => {
@@ -262,12 +272,7 @@ const Liveness = () => {
 
   // Step one
   const stepOne = () => {
-    const timer = setInterval(() => {
-      setCounter((prevCounter) => prevCounter - 1);
-    }, 1000);
-
     setTimeout(() => {
-      clearInterval(timer);
       setValidationStep(1);
     }, 5000);
   };
@@ -825,12 +830,11 @@ const Liveness = () => {
     <Container className="pt-4">
       {isModelLoading && <LoaderPage />}
 
-      {isWebcamActive && counterRef.current > 0 && (
+      {isWebcamActive && counter > 0 && (
         <div className="counter">
           <span>{counter}</span>
         </div>
       )}
-
       <h4 className="show-message">{message}</h4>
 
       <Button
