@@ -59,6 +59,8 @@ const FaceComparison = () => {
       setResult(100 * similarity);
       setLoading(false);
 
+      console.log("Similarity:", similarity.toFixed(2) + "%");
+
     } catch (error) {
       setResult(0)
       console.error("Error en la comparación de imágenes:", error.message);

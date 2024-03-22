@@ -5,7 +5,9 @@ import { TfiVideoClapper } from "react-icons/tfi";
 import LoaderPage from "../../utils/LoaderPage";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Human from "@vladmandic/human";
 import PropTypes from "prop-types";
+
 import {
   MdOutlineCheckCircle,
   MdOutlineCameraAlt,
@@ -38,6 +40,45 @@ const Home = () => {
 
     return () => clearTimeout(timeout);
   }, []);
+
+    // Human.js config object for face detection
+
+    const nanodet = "nanodet.json";
+
+    useEffect(() => {
+      const humanConfig = {
+        debug: true,
+        backend: "webgl",
+        cacheSensitivity: 0,
+        modelBasePath: "https://cdn.jsdelivr.net/gh/vladmandic/human-models/models",
+        face: {
+          enabled: true,
+          detector: {
+            maxDetected: 1,
+          },
+          emotion: { enabled: true },
+          age: { enabled: true },
+          gender: { enabled: true },
+          liveness: { enabled: true },
+          antispoof: { enabled: true },
+          iris: { enabled: true },
+        },
+        object: {
+          enabled: true,
+          modelPath: nanodet,
+        },
+        body: { enabled: false },
+        hand: { enabled: false },
+        gesture: { enabled: true },
+      };
+  
+      const humanInstance = new Human(humanConfig);
+      humanInstance.load();
+  
+      return () => {
+        humanInstance.sleep();
+      };
+    }, []);
 
   const StepCard = ({ step, icon: Icon, title }) => {
     return (
