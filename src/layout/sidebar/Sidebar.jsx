@@ -50,9 +50,10 @@ const Sidebar = ({ show, handleShow, handleClose }) => {
         <hr />
         <Offcanvas.Body className="p-1">
           <Nav defaultActiveKey="/home" className="flex-column">
+            
             <NavLink
               to="/"
-              className="sidebar-link d-flex flex-column align-items-center gap-1 fs-6"
+              className="sidebar-link d-flex flex-column align-items-center gap-2 fs-6"
             >
               <img src={facesearch} alt="antispoofing" draggable="false" width={30} />
               <span>Home</span>
@@ -60,7 +61,7 @@ const Sidebar = ({ show, handleShow, handleClose }) => {
             
             <NavLink
               to="/liveness"
-              className="sidebar-link d-flex flex-column align-items-center gap-1 fs-6"
+              className="sidebar-link d-flex flex-column align-items-center gap-2 fs-6"
             >
                <img src={antispoofing} alt="facesearch" draggable="false" width={40} />
               Liveness
@@ -68,7 +69,7 @@ const Sidebar = ({ show, handleShow, handleClose }) => {
             
             <NavLink
               to="/face-recognition"
-              className="sidebar-link d-flex flex-column align-items-center gap-1 fs-6"
+              className="sidebar-link d-flex flex-column align-items-center gap-2 fs-6"
             >
               <img src={facedetection} alt="facesearch" draggable="false" width={50} />
               Face Recognition
@@ -76,18 +77,16 @@ const Sidebar = ({ show, handleShow, handleClose }) => {
             
             <NavLink
               to="/face-comparison"
-              className="sidebar-link d-flex flex-column align-items-center gap-1 fs-6"
+              className="sidebar-link d-flex flex-column align-items-center gap-2 fs-6"
             >
               <img src={facecomp} alt="facesearch" draggable="false" width={70} />
               Face Comparison
             </NavLink>
             
-            <hr className="my-3"/>
-
             <Button
               variant="dark"
               onClick={logout}
-              className="btn-sm gap-2 my-4 mx-4"
+              className="btn-sm gap-2 my-5 mx-4"
             >
               <BsBoxArrowRight /> Log Out
             </Button>

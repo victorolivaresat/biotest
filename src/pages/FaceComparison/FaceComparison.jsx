@@ -69,12 +69,19 @@ const FaceComparison = () => {
 
   useEffect(() => {
     const humanConfig = {
+      debug: true,
+      backend: "webgl",
+      cacheSensitivity: 0,
+      modelBasePath: "https://cdn.jsdelivr.net/gh/vladmandic/human-models/models",
       face: {
         enabled: true,
         detector: { rotation: true, return: true },
         mesh: { enabled: true },
         description: { enabled: true },
       },
+      body : { enabled: false },
+      hand : { enabled: false },
+      object : { enabled: false },
     };
 
     const human = new Human(humanConfig);

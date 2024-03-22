@@ -127,7 +127,6 @@ const Liveness = () => {
         age: { enabled: true },
         gender: { enabled: true },
         liveness: { enabled: true },
-        gesture: { enabled: true },
         antispoof: { enabled: true },
         iris: { enabled: true },
       },
@@ -137,6 +136,7 @@ const Liveness = () => {
       },
       body: { enabled: false },
       hand: { enabled: false },
+      gesture: { enabled: true },
     };
 
     const humanInstance = new Human(humanConfig);
@@ -188,9 +188,6 @@ const Liveness = () => {
     setIsModelLoading(true);
 
     const models = await human.models.list();
-
-    console.log(models)
-
     const allModelsLoaded = models.every(
       (model) => model.loaded && model.size > 0
     );
